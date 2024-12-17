@@ -3,6 +3,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.4</version>
+    </parent>
+
     <groupId>com.example</groupId>
     <artifactId>fraud-detection-service</artifactId>
     <version>1.0.0</version>
@@ -14,26 +20,59 @@
     <properties>
         <java.version>17</java.version>
         <spring.boot.version>3.2.4</spring.boot.version>
+        <junit.jupiter.version>5.10.2</junit.jupiter.version>
         <jacoco.version>0.8.10</jacoco.version>
+        <aws.sdk.version>2.21.0</aws.sdk.version>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>bom</artifactId>
+                <version>${aws.sdk.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
-        <!-- Spring Boot Dependencies -->
+        <!-- Spring Boot Starter Web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
+        <!-- Spring Boot Starter Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
 
-        <!-- Alibaba MNS SDK -->
+        <!-- AWS SDK -->
         <dependency>
-            <groupId>com.aliyun.ams</groupId>
-            <artifactId>aliyun-java-sdk-mns</artifactId>
-            <version>1.2.6</version>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>sqs</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>google-cloud-pubsub</artifactId>
+            <version>1.126.3</version>
+        </dependency>
+        <!-- Lombok for reducing boilerplate code -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <!-- Jackson for JSON processing -->
@@ -42,23 +81,23 @@
             <artifactId>jackson-databind</artifactId>
         </dependency>
 
-        <!-- Lombok -->
+        <!-- JUnit for testing -->
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <!-- Spring Boot Plugin -->
+            <!-- Spring Boot Maven Plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
-            <!-- JaCoCo for Test Coverage -->
+            <!-- JaCoCo for test coverage -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -79,7 +118,7 @@
                 </executions>
             </plugin>
 
-            <!-- Maven Compiler Plugin -->
+            <!-- Compiler Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -92,11 +131,17 @@
         </plugins>
     </build>
 
+    <!-- Maven Repositories -->
     <repositories>
-        <!-- Aliyun Repository for Aliyun-Specific Dependencies -->
+        <!-- Aliyun Maven Repository -->
         <repository>
-            <id>aliyun-public</id>
+            <id>aliyun-central</id>
             <url>https://maven.aliyun.com/repository/public</url>
+        </repository>
+        <!-- Maven Central -->
+        <repository>
+            <id>maven-central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
         </repository>
     </repositories>
 </project>
