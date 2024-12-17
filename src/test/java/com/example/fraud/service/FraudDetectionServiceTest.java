@@ -1,6 +1,6 @@
 package com.example.fraud.service;
 
-import com.example.fraud.FraudDetectionApplication;
+import com.example.fraud.service.FraudDetectionService;
 import com.example.fraud.model.Transaction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,11 +11,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FraudDetectionServiceTest {
 
-    private FraudDetectionApplication fraudDetectionService;
+    private FraudDetectionService fraudDetectionService;
 
     @BeforeEach
     void setUp() {
-        fraudDetectionService = new FraudDetectionApplication();
+        fraudDetectionService = new FraudDetectionService();
     }
 
     @Test

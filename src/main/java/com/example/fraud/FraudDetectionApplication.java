@@ -1,11 +1,11 @@
 package com.example.fraud;
 
-import com.example.fraud.model.Transaction;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+@SpringBootApplication
 public class FraudDetectionApplication {
-    private final double THRESHOLD = 10000.0;
-
-    public boolean isFraudulent(Transaction transaction) {
-        return transaction.getAmount() > THRESHOLD;
+    public static void main(String[] args) {
+        SpringApplication.run(FraudDetectionApplication.class, args);
     }
 }
