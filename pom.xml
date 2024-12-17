@@ -10,12 +10,11 @@
     <packaging>jar</packaging>
     <name>Fraud Detection Service</name>
 
-    <!-- Parent Spring Boot -->
+    <!-- Spring Boot Parent -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.2.4</version>
-        <relativePath /> <!-- Lookup the parent from Maven repository -->
     </parent>
 
     <!-- Java Version -->
@@ -45,27 +44,48 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Jackson for JSON Serialization/Deserialization -->
+        <!-- Jackson for JSON Serialization -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
         </dependency>
 
-        <!-- AWS SDK for SQS Integration (Optional for Message Queues) -->
+        <!-- AWS SDK for SQS -->
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>sqs</artifactId>
             <version>2.21.0</version>
         </dependency>
 
-        <!-- Actuator for Health Monitoring (Optional) -->
+        <!-- GCP Pub/Sub -->
+        <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>google-cloud-pubsub</artifactId>
+            <version>1.126.3</version>
+        </dependency>
+
+        <!-- Alibaba Cloud SDK for Message Service -->
+        <dependency>
+            <groupId>com.aliyun.oss</groupId>
+            <artifactId>aliyun-sdk-oss</artifactId>
+            <version>3.16.2</version>
+        </dependency>
+
+        <!-- Service Loader Processor for SPI -->
+        <dependency>
+            <groupId>org.kohsuke</groupId>
+            <artifactId>metainf-services</artifactId>
+            <version>1.8</version>
+        </dependency>
+
+        <!-- Actuator for Health Monitoring -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
     </dependencies>
 
-    <!-- Build Configuration -->
+    <!-- Build Plugins -->
     <build>
         <plugins>
             <!-- Spring Boot Maven Plugin -->
