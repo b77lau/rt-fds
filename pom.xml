@@ -73,10 +73,12 @@
 
         <!-- Service Loader Processor for SPI -->
         <dependency>
-            <groupId>org.kohsuke</groupId>
+            <groupId>org.kohsuke.metainf-services</groupId>
             <artifactId>metainf-services</artifactId>
             <version>1.8</version>
+            <scope>provided</scope>
         </dependency>
+
 
         <!-- Actuator for Health Monitoring -->
         <dependency>
