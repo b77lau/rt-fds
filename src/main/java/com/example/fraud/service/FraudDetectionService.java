@@ -6,20 +6,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class FraudDetectionService {
 
-    private static final double FRAUD_THRESHOLD = 10000.0;
+    public void analyzeTransaction(Transaction transaction) {
+        System.out.println("Analyzing transaction: " + transaction);
 
-    /**
-     * Analyzes a transaction to determine if it is fraudulent.
-     *
-     * @param transaction The transaction to analyze.
-     * @return True if the transaction is fraudulent; false otherwise.
-     */
-    public boolean isFraudulent(Transaction transaction) {
-        if (transaction == null) {
-            throw new IllegalArgumentException("Transaction cannot be null");
+        if (isFraudulent(transaction)) {
+            System.out.println("ALERT: Fraudulent transaction detected! Transaction ID: "
+                    + transaction.getTransactionId());
+        } else {
+            System.out.println("Transaction is legitimate. Transaction ID: "
+                    + transaction.getTransactionId());
         }
+    }
 
-        // Rule: Transaction is fraudulent if the amount exceeds the threshold
-        return transaction.getAmount() > FRAUD_THRESHOLD;
+    private boolean isFraudulent(Transaction transaction) {
+        // Dummy fraud detection logic for demonstration purposes
+        return transaction.getAmount() > 10000;
     }
 }

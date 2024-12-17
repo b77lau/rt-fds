@@ -1,3 +1,0 @@
-com.example.fraud.providers.AwsSqsProvider
-com.example.fraud.providers.GcpPubSubProvider
-com.example.fraud.providers.AlibabaMessageProvider

@@ -22,7 +22,7 @@ public class Transaction {
     }
 
     // Getters and Setters
-    public String getId() {
+    public String getTransactionId() {
         return id;
     }
 

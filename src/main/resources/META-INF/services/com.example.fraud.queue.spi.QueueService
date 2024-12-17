@@ -1,0 +1,3 @@
+com.example.fraud.queue.providers.AWSQueueService
+com.example.fraud.queue.providers.GCPQueueService
+com.example.fraud.queue.providers.AlibabaQueueService

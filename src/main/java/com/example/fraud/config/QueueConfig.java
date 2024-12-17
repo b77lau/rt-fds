@@ -1,6 +1,6 @@
 package com.example.fraud.config;
 
-import com.example.fraud.spi.MessageQueueProvider;
+import com.example.fraud.queue.spi.QueueService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,8 +15,8 @@ public class QueueConfig {
      * MessageQueueProvider Bean - Loads provider dynamically using SPI
      */
     @Bean
-    public MessageQueueProvider messageQueueProvider() {
-        return MessageQueueProvider.load(providerName)
+    public QueueService messageQueueProvider() {
+        return QueueService.load(providerName)
                 .orElseThrow(() -> new IllegalArgumentException("Unsupported queue provider: " + providerName));
     }
 }
