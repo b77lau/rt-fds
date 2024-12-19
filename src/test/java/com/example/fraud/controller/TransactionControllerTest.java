@@ -2,54 +2,60 @@ package com.example.fraud.controller;
 
 import com.example.fraud.FraudDetectionApplication;
 import com.example.fraud.model.Transaction;
-import com.example.fraud.service.FraudDetectionService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDateTime;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-@SpringBootTest(classes = FraudDetectionApplication.class) // Explicitly point to main application
+@SpringBootTest(classes = FraudDetectionApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 class TransactionControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
-    private FraudDetectionService fraudDetectionService;
+    @Test
+    void testAnalyzeTransaction_ValidTransaction() throws Exception {
+        // JSON payload for the transaction
+        String transactionJson = """
+            {
+                "id": "1",
+                "accountNumber": "12345",
+                "amount": 100.00,
+                "timestamp": "2024-12-19T10:15:30"
+            }
+        """;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    private Transaction validTransaction;
-
-    @BeforeEach
-    void setUp() {
-        validTransaction = new Transaction("txn123", "ACC987654321", 15000.0, LocalDateTime.now());
+        // Perform POST request and validate the response
+        mockMvc.perform(post("/transactions/analyze")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(transactionJson))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.fraudulent").value(false)); // Assuming the response includes a 'fraudulent' field
     }
 
     @Test
-    void testAnalyzeTransaction_Fraudulent() throws Exception {
-        // Mock FraudDetectionService to return true for fraud
-        when(fraudDetectionService.isFraudulent(any(Transaction.class))).thenReturn(true);
+    void testAnalyzeTransaction_InvalidPayload() throws Exception {
+        // Invalid JSON payload
+        String invalidJson = """
+            {
+                "id": "1",
+                "accountNumber": "12345",
+                "amount": "invalidAmount",
+                "timestamp": "2024-12-19T10:15:30"
+            }
+        """;
 
-        mockMvc.perform(post("/analyze")
+        // Perform POST request and expect bad request status
+        mockMvc.perform(post("/transactions/analyze")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(validTransaction)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string("Fraud Detected"));
+                        .content(invalidJson))
+                .andExpect(status().isBadRequest());
     }
 }

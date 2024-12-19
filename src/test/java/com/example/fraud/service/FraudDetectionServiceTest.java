@@ -1,56 +1,71 @@
 package com.example.fraud.service;
 
-import com.example.fraud.service.FraudDetectionService;
 import com.example.fraud.model.Transaction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class FraudDetectionServiceTest {
 
-    private FraudDetectionService fraudDetectionService;
+    private com.example.fraud.service.FraudDetectionService fraudDetectionService;
 
     @BeforeEach
     void setUp() {
-        fraudDetectionService = new FraudDetectionService();
+        fraudDetectionService = new com.example.fraud.service.FraudDetectionService();
     }
 
     @Test
-    void testTransactionIsFraudulent_WhenAmountExceedsThreshold() {
-        // Arrange
-        Transaction transaction = new Transaction("txn123", "ACC987654321", 15000.0, LocalDateTime.now());
+    void testAnalyzeTransaction_HighRisk() {
+        Transaction transaction = new Transaction("T123", "ACC001", 6000.00, LocalDateTime.now());
 
-        // Act
-        boolean result = fraudDetectionService.isFraudulent(transaction);
+        Map<String, Object> result = fraudDetectionService.analyzeTransaction(transaction);
 
-        // Assert
-        assertTrue(result, "Transaction should be marked as fraudulent if amount exceeds the threshold.");
+        assertEquals("T123", result.get("transactionId"));
+        assertEquals("HIGH", result.get("riskLevel"));
+        assertEquals("Transaction flagged as HIGH risk.", result.get("message"));
     }
 
     @Test
-    void testTransactionIsNotFraudulent_WhenAmountIsBelowThreshold() {
-        // Arrange
-        Transaction transaction = new Transaction("txn456", "ACC123456789", 9000.0, LocalDateTime.now());
+    void testAnalyzeTransaction_MediumRisk() {
+        Transaction transaction = new Transaction("T124", "ACC002", 1500.00, LocalDateTime.now());
 
-        // Act
-        boolean result = fraudDetectionService.isFraudulent(transaction);
+        Map<String, Object> result = fraudDetectionService.analyzeTransaction(transaction);
 
-        // Assert
-        assertFalse(result, "Transaction should not be marked as fraudulent if amount is below the threshold.");
+        assertEquals("T124", result.get("transactionId"));
+        assertEquals("MEDIUM", result.get("riskLevel"));
+        assertEquals("Transaction flagged as MEDIUM risk.", result.get("message"));
     }
 
     @Test
-    void testTransactionIsFraudulent_WhenAmountEqualsThreshold() {
-        // Arrange
-        Transaction transaction = new Transaction("txn789", "ACC123456789", 10000.0, LocalDateTime.now());
+    void testAnalyzeTransaction_LowRisk() {
+        Transaction transaction = new Transaction("T125", "ACC003", 500.00, LocalDateTime.now());
 
-        // Act
-        boolean result = fraudDetectionService.isFraudulent(transaction);
+        Map<String, Object> result = fraudDetectionService.analyzeTransaction(transaction);
 
-        // Assert
-        assertFalse(result, "Transaction should not be marked as fraudulent if amount equals the threshold.");
+        assertEquals("T125", result.get("transactionId"));
+        assertEquals("LOW", result.get("riskLevel"));
+        assertEquals("Transaction is LOW risk.", result.get("message"));
+    }
+
+    @Test
+    void testIsFraudulent_HighRiskTransaction() {
+        Transaction transaction = new Transaction("T126", "ACC004", 6000.00, LocalDateTime.now());
+
+        boolean isFraudulent = fraudDetectionService.isFraudulent(transaction);
+
+        assertTrue(isFraudulent, "Transaction should be marked as fraudulent for high-risk transactions.");
+    }
+
+    @Test
+    void testIsFraudulent_LowRiskTransaction() {
+        Transaction transaction = new Transaction("T127", "ACC005", 500.00, LocalDateTime.now());
+
+        boolean isFraudulent = fraudDetectionService.isFraudulent(transaction);
+
+        assertFalse(isFraudulent, "Transaction should not be marked as fraudulent for low-risk transactions.");
     }
 }
