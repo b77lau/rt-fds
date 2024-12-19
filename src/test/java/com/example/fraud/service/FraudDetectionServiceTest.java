@@ -1,8 +1,10 @@
 package com.example.fraud.service;
 
 import com.example.fraud.model.Transaction;
+import com.example.fraud.queue.spi.QueueServiceFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -11,11 +13,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FraudDetectionServiceTest {
 
-    private com.example.fraud.service.FraudDetectionService fraudDetectionService;
+    private FraudDetectionService fraudDetectionService;
+    private QueueServiceFactory mockQueueServiceFactory;
 
     @BeforeEach
     void setUp() {
-        fraudDetectionService = new com.example.fraud.service.FraudDetectionService();
+        // Create a mock QueueServiceFactory
+        mockQueueServiceFactory = Mockito.mock(QueueServiceFactory.class);
+
+        // Initialize FraudDetectionService with the mock dependency
+        fraudDetectionService = new FraudDetectionService(mockQueueServiceFactory);
     }
 
     @Test
@@ -49,23 +56,5 @@ class FraudDetectionServiceTest {
         assertEquals("T125", result.get("transactionId"));
         assertEquals("LOW", result.get("riskLevel"));
         assertEquals("Transaction is LOW risk.", result.get("message"));
-    }
-
-    @Test
-    void testIsFraudulent_HighRiskTransaction() {
-        Transaction transaction = new Transaction("T126", "ACC004", 6000.00, LocalDateTime.now());
-
-        boolean isFraudulent = fraudDetectionService.isFraudulent(transaction);
-
-        assertTrue(isFraudulent, "Transaction should be marked as fraudulent for high-risk transactions.");
-    }
-
-    @Test
-    void testIsFraudulent_LowRiskTransaction() {
-        Transaction transaction = new Transaction("T127", "ACC005", 500.00, LocalDateTime.now());
-
-        boolean isFraudulent = fraudDetectionService.isFraudulent(transaction);
-
-        assertFalse(isFraudulent, "Transaction should not be marked as fraudulent for low-risk transactions.");
     }
 }

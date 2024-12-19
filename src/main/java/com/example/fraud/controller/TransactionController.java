@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/transactions")
+@RequestMapping("/transactions")
 public class TransactionController {
 
     private final FraudDetectionService fraudDetectionService;
@@ -21,13 +21,8 @@ public class TransactionController {
 
     @PostMapping("/analyze")
     public ResponseEntity<Map<String, Object>> analyzeTransaction(@RequestBody Transaction transaction) {
-        boolean isFraudulent = fraudDetectionService.isFraudulent(transaction);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("transactionId", transaction.getTransactionId());
-        response.put("isFraudulent", isFraudulent);
-
-        return ResponseEntity.ok(response);
+        Map<String, Object> result = fraudDetectionService.analyzeTransaction(transaction);
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/add")
