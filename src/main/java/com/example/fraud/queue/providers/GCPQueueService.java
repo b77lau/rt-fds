@@ -3,6 +3,7 @@ package com.example.fraud.queue.providers;
 import com.example.fraud.model.Transaction;
 import com.example.fraud.queue.spi.QueueService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.cloud.pubsub.v1.AckReplyConsumer;
 import com.google.cloud.pubsub.v1.MessageReceiver;
 import com.google.cloud.pubsub.v1.Subscriber;
 import com.google.pubsub.v1.ProjectSubscriptionName;
@@ -32,7 +33,7 @@ public class GCPQueueService implements QueueService {
 
         ProjectSubscriptionName subscriptionName = ProjectSubscriptionName.of(projectId, subscriptionId);
 
-        Subscriber subscriber = Subscriber.newBuilder(subscriptionName, (PubsubMessage message, AckReplyConsumer consumer) -> {
+        com.google.cloud.pubsub.v1.Subscriber subscriber =  com.google.cloud.pubsub.v1.Subscriber.newBuilder(subscriptionName, (PubsubMessage message, AckReplyConsumer consumer) -> {
             try {
                 String data = message.getData().toStringUtf8();
                 transaction[0] = new ObjectMapper().readValue(data, Transaction.class);
